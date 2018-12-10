@@ -1,11 +1,12 @@
-import sys
 import csv
+import sys
 from collections import namedtuple
 from datetime import datetime, timedelta
+from urllib.parse import quote_plus
 
-from lxml import html
-from jinja2 import Environment, PackageLoader, select_autoescape, FileSystemLoader
 import requests
+from jinja2 import Environment, FileSystemLoader, PackageLoader, select_autoescape
+from lxml import html
 
 
 def parse_it(html_content):
@@ -76,10 +77,18 @@ class Streak(namedtuple("Streak", ["start_date", "length", "achievement_count"])
 def build_gamer(gamer_id, streaks, num_to_display):
     Gamer = namedtuple(
         "Gamer",
-        "name best_n_by_count best_n_by_num_days best_n_by_avg_per_day best_n_by_weighted_avg".split(),
+        [
+            "name",
+            "homepage",
+            "best_n_by_count",
+            "best_n_by_num_days",
+            "best_n_by_avg_per_day",
+            "best_n_by_weighted_avg",
+        ],
     )
     return Gamer(
         gamer_id,
+        f"https://www.trueachievements.com/gamer/{quote_plus(gamer_id)}",
         sorted(streaks, key=lambda x: x.achievement_count, reverse=True)[
             :num_to_display
         ],
@@ -131,7 +140,7 @@ def write_html(gamer1, gamer2, num_to_display):
         autoescape=select_autoescape(["html", "xml"]),
     )
 
-    template = env.get_template("compare_gamers.html")
+    template = env.get_template("compare_gamers.jinja2")
 
     with open("rendered.html", "w") as fobj:
         fobj.write(

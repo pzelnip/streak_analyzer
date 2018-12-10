@@ -4,8 +4,8 @@
 
 <table>
     <tr>
-        <th>{{gamer1.name}}</th>
-        <th>{{gamer2.name}}</th>
+        <th><a href='{{gamer1.homepage}}'>{{gamer1.name}}</a></th>
+        <th><a href='{{gamer2.homepage}}'>{{gamer2.name}}</a></th>
     </tr>
     <tr>
         <td>
@@ -42,7 +42,8 @@
 
 <body>
 
-    <h1>Comparing {{gamer1.name}} with {{gamer2.name}}</h1>
+    <h1>Comparing <a href='{{gamer1.homepage}}'>{{gamer1.name}}</a>
+        with <a href='{{gamer2.homepage}}'>{{gamer2.name}}</a></h1>
 
     {{ gamer_table('Best Streaks by Achievement Count', gamer1, gamer2, 'best_n_by_count') }}
     {{ gamer_table('Best Streaks by Number of Days', gamer1, gamer2, 'best_n_by_num_days') }}
