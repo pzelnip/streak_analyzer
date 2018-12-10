@@ -1,0 +1,54 @@
+{% macro gamer_table(heading, gamer1, gamer2, field_name) -%}
+
+<h2>{{heading}}</h2>
+
+<table>
+    <tr>
+        <th>{{gamer1.name}}</th>
+        <th>{{gamer2.name}}</th>
+    </tr>
+    <tr>
+        <td>
+            <ul>
+                {% for streak in gamer1[field_name] %}
+                <li>{{streak}}</li>
+                {% endfor %}
+            </ul>
+        </td>
+        <td>
+            <ul>
+                {% for streak in gamer2[field_name] %}
+                <li>{{streak}}</li>
+                {% endfor %}
+            </ul>
+        </td>
+    </tr>
+</table>
+
+{%- endmacro %}
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Streak Comparison</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+</head>
+
+<body>
+
+    <h1>Comparing {{gamer1.name}} with {{gamer2.name}}</h1>
+
+    {{ gamer_table('Best Streaks by Achievement Count', gamer1, gamer2, 'best_n_by_count') }}
+    {{ gamer_table('Best Streaks by Number of Days', gamer1, gamer2, 'best_n_by_num_days') }}
+    {{ gamer_table('Best Streaks by Achievement Count Per Day', gamer1, gamer2, 'best_n_by_avg_per_day') }}
+    {{ gamer_table('Best Streaks by Weighted Avg Count Per Day', gamer1, gamer2, 'best_n_by_weighted_avg') }}
+
+</body>
+
+</html>

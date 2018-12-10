@@ -1,0 +1,6 @@
+black
+jinja2
+lxml
+pydocstyle
+pylint
+requests
