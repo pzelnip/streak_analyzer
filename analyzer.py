@@ -1,4 +1,10 @@
-import csv
+"""Achievement Streak Analyzer.
+
+Given two TA (trueachievements.com) gamer id's produce an HTML report
+comparing the achievement streaks of those two gamers.
+"""
+
+
 import sys
 from collections import namedtuple
 from datetime import datetime, timedelta
@@ -9,36 +15,9 @@ from jinja2 import Environment, FileSystemLoader, PackageLoader, select_autoesca
 from lxml import html
 
 
-def parse_it(html_content):
-    def _process_row(row):
-        tds = row.xpath(".//td")
-        if not tds:
-            return None
-        return Streak(
-            datetime.strptime(tds[0].text_content(), "%d %b %Y").date(),
-            int(tds[1].text_content().replace(",", "")),
-            int(tds[2].text_content().replace(",", "")),
-        )
-
-    try:
-        tree = html.fromstring(html_content)
-        table = tree.xpath("//table[@id='oWinStreaks']")[0]
-        breadcrumbs = tree.xpath("//div[@id='breadcrumbs']")[0]
-        gamertag = breadcrumbs.xpath(".//span/text()")[0]
-    except IndexError:
-        return []
-
-    return (
-        gamertag,
-        list(
-            streak
-            for streak in (_process_row(row) for row in table.xpath(".//tr"))
-            if streak
-        ),
-    )
-
-
 class Streak(namedtuple("Streak", ["start_date", "length", "achievement_count"])):
+    """Basic data class representing an achievement streak."""
+
     MIN_LENGTH = 30
     MIN_COUNT = 60
 
@@ -74,7 +53,40 @@ class Streak(namedtuple("Streak", ["start_date", "length", "achievement_count"])
         )
 
 
+def parse_it(html_content):
+    """Parse the the HTML content of a TA streaks page."""
+
+    def _process_row(row):
+        tds = row.xpath(".//td")
+        if not tds:
+            return None
+        return Streak(
+            datetime.strptime(tds[0].text_content(), "%d %b %Y").date(),
+            int(tds[1].text_content().replace(",", "")),
+            int(tds[2].text_content().replace(",", "")),
+        )
+
+    try:
+        tree = html.fromstring(html_content)
+        table = tree.xpath("//table[@id='oWinStreaks']")[0]
+        breadcrumbs = tree.xpath("//div[@id='breadcrumbs']")[0]
+        gamertag = breadcrumbs.xpath(".//span/text()")[0]
+    except IndexError:
+        return []
+
+    return (
+        gamertag,
+        list(
+            streak
+            for streak in (_process_row(row) for row in table.xpath(".//tr"))
+            if streak
+        ),
+    )
+
+
 def build_gamer(gamer_id, streaks, num_to_display):
+    """Build a gamer object that contains information about a gamer."""
+
     Gamer = namedtuple(
         "Gamer",
         [
@@ -101,11 +113,13 @@ def build_gamer(gamer_id, streaks, num_to_display):
 
 
 def get_streaks(gamer_id):
+    """Get achievement streaks for the given TA gamer_id."""
     page = requests.get(
         f"https://www.trueachievements.com/winstreaks.aspx?gamerid={gamer_id}"
     )
     return parse_it(page.content)
 
+    # Debugging code
     # import pickle
 
     # # with open('streaks1.pkl', 'wb') as fobj:
@@ -116,6 +130,8 @@ def get_streaks(gamer_id):
 
 
 def process_streaks(gamer_id, num_to_display):
+    """Process streaks for the given TA gamer_id."""
+
     print("Getting streaks...")
     gamertag, streaks = get_streaks(gamer_id)  # 11497)  # 20768)
     print("Done getting streaks")
@@ -125,16 +141,8 @@ def process_streaks(gamer_id, num_to_display):
     return gamer
 
 
-def main():
-    if len(sys.argv) != 3:
-        print(f"Specify gamerid: {sys.argv[0]} <gamerid1> <gamerid2>")
-        return 1
-    gamer1 = process_streaks(int(sys.argv[1]), 10)
-    gamer2 = process_streaks(int(sys.argv[2]), 10)
-    write_html(gamer1, gamer2, 10)
-
-
 def write_html(gamer1, gamer2, num_to_display):
+    """Write HTML output of comparison of two gamers to current directory."""
     env = Environment(
         loader=FileSystemLoader("./templates"),
         autoescape=select_autoescape(["html", "xml"]),
@@ -146,6 +154,15 @@ def write_html(gamer1, gamer2, num_to_display):
         fobj.write(
             template.render(gamer1=gamer1, gamer2=gamer2, num_streaks=num_to_display)
         )
+
+
+def main():
+    if len(sys.argv) != 3:
+        print(f"Specify gamerid: {sys.argv[0]} <gamerid1> <gamerid2>")
+        return 1
+    gamer1 = process_streaks(int(sys.argv[1]), 10)
+    gamer2 = process_streaks(int(sys.argv[2]), 10)
+    write_html(gamer1, gamer2, 10)
 
 
 if __name__ == "__main__":
