@@ -13,7 +13,7 @@
                     <a href='{{gamer.homepage}}'>{{gamer.name}}</a>
                 </h3>
             </div>
-            <ul class="w3-ul w3-border-top">
+            <ul class="w3-ul w3-border-top w3-card w3-hoverable">
                 {% for streak in gamer[streak_name] %}
                     {{ render_streak(streak, highlight_field) }}
                 {% endfor %}
