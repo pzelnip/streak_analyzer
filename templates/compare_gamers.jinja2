@@ -9,7 +9,7 @@
     <div class="w3-half">
         <div class=""w3-card white">
             <div class="w3-container">
-                <h3 class="w3-indigo w3-center">
+                <h3 class="w3-blue-grey w3-center">
                     <a href='{{gamer.homepage}}'>{{gamer.name}}</a>
                 </h3>
             </div>
@@ -25,7 +25,7 @@
 {% macro gamer_table(heading, gamer1, gamer2, streak_name, highlight_field) -%}
 
 <div class="w3-center">
-    <h2>Best Streaks by {{heading}}</h2>
+    <h2 id="{{heading}}">Best Streaks by {{heading}}</h2>
 </div>
 
 <div class="w3-row-padding">
@@ -35,6 +35,12 @@
 
 {%- endmacro %}
 
+{% macro render_navbar(items) -%}
+    {% for item in items %}
+        <a href="#{{item}}" class="w3-bar-item w3-button w3-padding-16">{{item}}</a>
+    {% endfor %}
+
+{%- endmacro %}
 
 <!DOCTYPE html>
 <html>
@@ -55,10 +61,14 @@
         <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub">
     </a>
 
-    <header class="w3-container w3-blue-grey w3-center">
+    <header class="w3-container w3-blue-grey">
         <h2>Comparing <a href='{{gamer1.homepage}}'>{{gamer1.name}}</a>
             with <a href='{{gamer2.homepage}}'>{{gamer2.name}}</a></h2>
     </header>
+
+    <div class="w3-bar w3-blue-grey">
+        {{render_navbar(['Number of Days', 'Achievement Count','Achievement Count Per Day', 'Weighted Avg Count Per Day'])}}
+    </div>
 
     <div class="w3-row-padding">
         {{ gamer_table('Number of Days', gamer1, gamer2, 'best_n_by_num_days', 'length') }}
