@@ -168,9 +168,10 @@ def main():
     if len(sys.argv) != 3:
         print(f"Specify gamerid: {sys.argv[0]} <gamerid1> <gamerid2>")
         return 1
-    gamer1 = process_streaks(int(sys.argv[1]), 10)
-    gamer2 = process_streaks(int(sys.argv[2]), 10)
-    write_html(gamer1, gamer2, 10)
+    num_streaks = 5
+    gamer1 = process_streaks(int(sys.argv[1]), num_streaks)
+    gamer2 = process_streaks(int(sys.argv[2]), num_streaks)
+    write_html(gamer1, gamer2, num_streaks)
 
 
 if __name__ == "__main__":

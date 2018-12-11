@@ -1,15 +1,15 @@
-{% macro render_streak(streak, highlight_field) -%}
+{% macro render_streak(streak, highlight_field, bigger=False) -%}
     <li>
         <h3>{{streak[highlight_field]|format_num}}</h3>
-        <p>Streak details: {{streak}}</p>
+        <p>Streak details: <br>{{streak}}</p>
     </li>
 {%- endmacro %}
 
 {% macro render_column(gamer, streak_name, highlight_field) -%}
-    <div class="w3-half">
+    <div class="w3-half w3-card">
         <div class=""w3-card white">
             <div class="w3-container">
-                <h3 class="w3-blue-grey w3-center">
+                <h3 class="w3-theme w3-center">
                     <a href='{{gamer.homepage}}'>{{gamer.name}}</a>
                 </h3>
             </div>
@@ -24,11 +24,11 @@
 
 {% macro gamer_table(heading, gamer1, gamer2, streak_name, highlight_field) -%}
 
-<div class="w3-center">
+<div class="w3-center w3-animate-opacity">
     <h2 id="{{heading}}">Best Streaks by {{heading}}</h2>
 </div>
 
-<div class="w3-row-padding">
+<div class="w3-row-padding w3-animate-opacity">
     {{ render_column(gamer1, streak_name, highlight_field)}}
     {{ render_column(gamer2, streak_name, highlight_field)}}    
 </div>
@@ -61,12 +61,12 @@
         <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub">
     </a>
 
-    <header class="w3-container w3-blue-grey">
+    <header class="w3-container w3-theme w3-animate-opacity">
         <h2>Comparing <a href='{{gamer1.homepage}}'>{{gamer1.name}}</a>
             with <a href='{{gamer2.homepage}}'>{{gamer2.name}}</a></h2>
     </header>
 
-    <div class="w3-bar w3-blue-grey">
+    <div class="w3-bar w3-theme w3-animate-opacity">
         {{render_navbar(['Number of Days', 'Achievement Count','Achievement Count Per Day', 'Weighted Avg Count Per Day'])}}
     </div>
 
@@ -80,7 +80,7 @@
         {{ gamer_table('Weighted Avg Count Per Day', gamer1, gamer2, 'best_n_by_weighted_avg', 'weighted_average') }}
     </div>
 
-    <footer class="w3-container w3-blue-grey">
+    <footer class="w3-container w3-theme">
         <h5>Streak Analyzer</h5>
         <p class="w3-opacity">Comparing gamers since 2018</p>
     </footer>
