@@ -1,29 +1,47 @@
-{% macro gamer_table(heading, gamer1, gamer2, field_name) -%}
+{% macro render_streak(streak, highlight_field) -%}
+    <li>
+        <h3>{{streak[highlight_field]|format_num}}</h3>
+        <p>{{streak}}</p>
+    </li>
+{%- endmacro %}
 
-<h2>{{heading}}</h2>
+{% macro gamer_table(heading, gamer1, gamer2, streak_name, highlight_field) -%}
 
-<table>
-    <tr>
-        <th><a href='{{gamer1.homepage}}'>{{gamer1.name}}</a></th>
-        <th><a href='{{gamer2.homepage}}'>{{gamer2.name}}</a></th>
-    </tr>
-    <tr>
-        <td>
-            <ul>
-                {% for streak in gamer1[field_name] %}
-                <li>{{streak}}</li>
+<div class="w3-center">
+    <h2>{{heading}}</h2>
+</div>
+
+<div class="w3-row-padding">
+    <div class="w3-half">
+        <div class=""w3-card white">
+            <div class="w3-container">
+                <h3 class="w3-indigo w3-center">
+                    <a href='{{gamer1.homepage}}'>{{gamer1.name}}</a>
+                </h3>
+            </div>
+            <ul class="w3-ul w3-border-top">
+                {% for streak in gamer1[streak_name] %}
+                    {{ render_streak(streak, highlight_field) }}
                 {% endfor %}
             </ul>
-        </td>
-        <td>
-            <ul>
-                {% for streak in gamer2[field_name] %}
-                <li>{{streak}}</li>
+        </div>
+    </div>
+
+    <div class="w3-half">
+        <div class=""w3-card white">
+            <div class="w3-container">
+                <h3 class="w3-center w3-theme">
+                    <a href='{{gamer2.homepage}}'>{{gamer2.name}}</a>
+                </h3>
+            </div>
+            <ul class="w3-ul w3-border-top">
+                {% for streak in gamer2[streak_name] %}
+                    {{ render_streak(streak, highlight_field) }}
                 {% endfor %}
             </ul>
-        </td>
-    </tr>
-</table>
+        </div>
+    </div>
+</div>
 
 {%- endmacro %}
 
@@ -37,7 +55,9 @@
     <title>Streak Comparison</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script src="main.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -45,14 +65,20 @@
         <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub">
     </a>
 
-    <h1>Comparing <a href='{{gamer1.homepage}}'>{{gamer1.name}}</a>
-        with <a href='{{gamer2.homepage}}'>{{gamer2.name}}</a></h1>
+    <header class="w3-container w3-blue-grey w3-center">
+        <h1>Comparing <a href='{{gamer1.homepage}}'>{{gamer1.name}}</a>
+            with <a href='{{gamer2.homepage}}'>{{gamer2.name}}</a></h1>
+    </header>
 
-    {{ gamer_table('Best Streaks by Achievement Count', gamer1, gamer2, 'best_n_by_count') }}
-    {{ gamer_table('Best Streaks by Number of Days', gamer1, gamer2, 'best_n_by_num_days') }}
-    {{ gamer_table('Best Streaks by Achievement Count Per Day', gamer1, gamer2, 'best_n_by_avg_per_day') }}
-    {{ gamer_table('Best Streaks by Weighted Avg Count Per Day', gamer1, gamer2, 'best_n_by_weighted_avg') }}
-
+    <div class="w3-row-padding">
+        {{ gamer_table('Best Streaks by Achievement Count', gamer1, gamer2, 'best_n_by_count', 'achievement_count') }}
+        <hr>
+        {{ gamer_table('Best Streaks by Number of Days', gamer1, gamer2, 'best_n_by_num_days', 'length') }}
+        <hr>
+        {{ gamer_table('Best Streaks by Achievement Count Per Day', gamer1, gamer2, 'best_n_by_avg_per_day', 'average_per_day') }}
+        <hr>
+        {{ gamer_table('Best Streaks by Weighted Avg Count Per Day', gamer1, gamer2, 'best_n_by_weighted_avg', 'weighted_average') }}
+    </div>
 </body>
 
 </html>

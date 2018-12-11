@@ -143,10 +143,18 @@ def process_streaks(gamer_id, num_to_display):
 
 def write_html(gamer1, gamer2, num_to_display):
     """Write HTML output of comparison of two gamers to current directory."""
+
+    def format_num(value):
+        fmt_str = "{:,}"
+        if isinstance(value, float):
+            fmt_str = "{0:,.3f}"
+        return fmt_str.format(value)
+
     env = Environment(
         loader=FileSystemLoader("./templates"),
         autoescape=select_autoescape(["html", "xml"]),
     )
+    env.filters["format_num"] = format_num
 
     template = env.get_template("compare_gamers.jinja2")
 
