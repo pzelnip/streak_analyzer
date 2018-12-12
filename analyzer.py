@@ -15,7 +15,9 @@ from jinja2 import Environment, FileSystemLoader, PackageLoader, select_autoesca
 from lxml import html
 
 
-class Streak(namedtuple("Streak", ["start_date", "length", "achievement_count"])):
+class Streak(
+    namedtuple("Streak", ["start_date", "url", "length", "achievement_count"])
+):
     """Basic data class representing an achievement streak."""
 
     MIN_LENGTH = 30
@@ -57,11 +59,20 @@ def parse_it(html_content):
     """Parse the the HTML content of a TA streaks page."""
 
     def _process_row(row):
+        def _process_date(tdnode):
+            url = (
+                "https://www.trueachievements.com" + tdnode.xpath(".//a")[0].values()[0]
+            )
+            return datetime.strptime(tdnode[0].text_content(), "%d %b %Y").date(), url
+
         tds = row.xpath(".//td")
         if not tds:
             return None
+        streak_date, streak_url = _process_date(tds[0])
         return Streak(
-            datetime.strptime(tds[0].text_content(), "%d %b %Y").date(),
+            # datetime.strptime(tds[0].text_content(), "%d %b %Y").date(),
+            streak_date,
+            streak_url,
             int(tds[1].text_content().replace(",", "")),
             int(tds[2].text_content().replace(",", "")),
         )

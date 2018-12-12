@@ -1,8 +1,10 @@
 {% macro render_streak(streak, highlight_field, bigger=False) -%}
-    <li>
-        <h3>{{streak[highlight_field]|format_num}}</h3>
-        <p>Streak details: <br>{{streak}}</p>
-    </li>
+    <a class="nounder" href="{{streak.url}}">
+        <li>
+            <h3>{{streak[highlight_field]|format_num}}</h3>
+            <p>Streak details: <br>{{streak}}</p>
+        </li>
+    </a>
 {%- endmacro %}
 
 {% macro render_column(gamer, streak_name, highlight_field) -%}
@@ -54,6 +56,12 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <style>
+        .nounder {
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
