@@ -130,15 +130,15 @@ def get_streaks(gamer_id):
     )
     result = parse_it(page.content)
 
-    # Debugging code
-    import pickle
+    # # Debugging code
+    # import pickle
 
     # with open("streaks1.pkl", "wb") as fobj:
     #     pickle.dump(result, fobj)
 
-    with open("streaks1.pkl", "rb") as fobj:
-        return pickle.load(fobj)
-    # return result
+    # with open("streaks1.pkl", "rb") as fobj:
+    #     return pickle.load(fobj)
+    return result
 
 
 def process_streaks(gamer_id, num_to_display):
