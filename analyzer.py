@@ -128,16 +128,17 @@ def get_streaks(gamer_id):
     page = requests.get(
         f"https://www.trueachievements.com/winstreaks.aspx?gamerid={gamer_id}"
     )
-    return parse_it(page.content)
+    result = parse_it(page.content)
 
     # Debugging code
-    # import pickle
+    import pickle
 
-    # # with open('streaks1.pkl', 'wb') as fobj:
-    # #     pickle.dump(streaks, fobj)
+    # with open("streaks1.pkl", "wb") as fobj:
+    #     pickle.dump(result, fobj)
 
-    # with open("streaks1.pkl", "rb") as fobj:
-    #     return pickle.load(fobj)
+    with open("streaks1.pkl", "rb") as fobj:
+        return pickle.load(fobj)
+    # return result
 
 
 def process_streaks(gamer_id, num_to_display):

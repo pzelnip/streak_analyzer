@@ -1,7 +1,9 @@
+{% set HIGHLIGHT_CLASS = 'w3-dark-grey' %}
+
 {% macro render_streak(streak, highlight_field, bigger=False) -%}
     <a class="nounder" href="{{streak.url}}">
         <li>
-            <h3>{{streak[highlight_field]|format_num}}</h3>
+            <h3 class='w3-sand'>{{streak[highlight_field]|format_num}}</h3>
             <p>Streak details: <br>{{streak}}</p>
         </li>
     </a>
@@ -24,23 +26,39 @@
     </div>
 {%- endmacro %}
 
-{% macro gamer_table(heading, gamer1, gamer2, streak_name, highlight_field) -%}
+{% macro gamer_table(heading, gamer1, gamer2, streak_name, highlight_field, first_row) -%}
 
-<div class="w3-center w3-animate-opacity">
-    <h2 id="{{heading}}">Best Streaks by {{heading}}</h2>
-</div>
-
-<div class="w3-row-padding w3-animate-opacity">
+<div id="{{streak_name}}" class="w3-container streak w3-animate-opacity"
+    {% if not first_row %}
+    style="display:none"
+    {% endif %}
+>
+    <h2>{{heading}}</h2>
     {{ render_column(gamer1, streak_name, highlight_field)}}
     {{ render_column(gamer2, streak_name, highlight_field)}}    
 </div>
 
+
 {%- endmacro %}
 
 {% macro render_navbar(items) -%}
-    {% for item in items %}
-        <a href="#{{item}}" class="w3-bar-item w3-button w3-padding-16">{{item}}</a>
-    {% endfor %}
+    <div class="w3-bar w3-theme w3-animate-opacity">
+        {% for heading, gamer1, gamer2, streak_name, highlight_field in items[0:1] %}
+            <button class="w3-bar-item w3-button {{HIGHLIGHT_CLASS}} tablink" onclick="openStreak(event, '{{streak_name}}')"
+                 >{{heading}}</button>
+        {% endfor %}
+        {% for heading, gamer1, gamer2, streak_name, highlight_field in items[1:] %}
+            <button class="w3-bar-item w3-button tablink" onclick="openStreak(event, '{{streak_name}}')">{{heading}}</button>
+        {% endfor %}
+    </div>
+
+    <div class="w3-row-padding">
+        {{ gamer_table(items[0][0], items[0][1], items[0][2], items[0][3], items[0][4], True) }}
+
+        {% for heading, gamer1, gamer2, streak_name, highlight_field in items %}
+            {{ gamer_table(heading, gamer1, gamer2, streak_name, highlight_field, False) }}
+        {% endfor %}
+    </div>
 
 {%- endmacro %}
 
@@ -74,24 +92,36 @@
             with <a href='{{gamer2.homepage}}'>{{gamer2.name}}</a></h2>
     </header>
 
-    <div class="w3-bar w3-theme w3-animate-opacity">
-        {{render_navbar(['Number of Days', 'Achievement Count','Achievement Count Per Day', 'Weighted Avg Count Per Day'])}}
-    </div>
-
-    <div class="w3-row-padding">
-        {{ gamer_table('Number of Days', gamer1, gamer2, 'best_n_by_num_days', 'length') }}
-        <hr>
-        {{ gamer_table('Achievement Count', gamer1, gamer2, 'best_n_by_count', 'achievement_count') }}
-        <hr>
-        {{ gamer_table('Achievement Count Per Day', gamer1, gamer2, 'best_n_by_avg_per_day', 'average_per_day') }}
-        <hr>
-        {{ gamer_table('Weighted Avg Count Per Day', gamer1, gamer2, 'best_n_by_weighted_avg', 'weighted_average') }}
-    </div>
-
+    {{
+        render_navbar([
+            ('Number of Days', gamer1, gamer2, 'best_n_by_num_days', 'length'), 
+            ('Achievement Count', gamer1, gamer2, 'best_n_by_count', 'achievement_count'),
+            ('Achievement Count Per Day', gamer1, gamer2, 'best_n_by_avg_per_day', 'average_per_day'),
+            ('Weighted Avg Count Per Day', gamer1, gamer2, 'best_n_by_weighted_avg', 'weighted_average'),
+        ])
+    }}
     <footer class="w3-container w3-theme">
         <h5>Streak Analyzer</h5>
         <p class="w3-opacity">Comparing gamers since 2018</p>
     </footer>
+
+    <script>
+    function openStreak(evt, streakName) {
+        var i;
+        var x = document.getElementsByClassName("streak");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        // clear highlighted selected tab
+        tablinks = document.getElementsByClassName("tablink");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" {{HIGHLIGHT_CLASS}}", "");
+        }
+        // highlight selected tab
+        document.getElementById(streakName).style.display = "block";  
+        evt.currentTarget.className += " {{HIGHLIGHT_CLASS}}";
+    }
+    </script>
 </body>
 
 </html>
