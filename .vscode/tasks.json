@@ -9,7 +9,7 @@
         {
             "label": "Update Python Dependencies",
             "type": "shell",
-            "command": "~/.virtualenvs/streak_analyzer/bin/pip install -r requirements.txt --upgrade"
+            "command": "~/.virtualenvs/streak_analyzer/bin/pip install -r requirements.txt --upgrade && ~/.virtualenvs/streak_analyzer/bin/pip install -r requirements-dev.txt --upgrade"
         },
     ]
 }

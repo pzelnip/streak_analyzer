@@ -130,3 +130,5 @@ dmypy.json
 .vscode/settings.json
 
 rendered.html
+lambda.zip
+streaks1.pkl
