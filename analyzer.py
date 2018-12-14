@@ -169,20 +169,22 @@ def write_html(gamer1, gamer2, num_to_display):
 
     template = env.get_template("compare_gamers.jinja2")
 
-    with open("rendered.html", "w") as fobj:
-        fobj.write(
-            template.render(gamer1=gamer1, gamer2=gamer2, num_streaks=num_to_display)
-        )
+    return template.render(gamer1=gamer1, gamer2=gamer2, num_streaks=num_to_display)
+
+
+def lambda_entrypoint(gamer_id1, gamer_id2, num_streaks=5):
+    gamer1 = process_streaks(int(sys.argv[1]), num_streaks)
+    gamer2 = process_streaks(int(sys.argv[2]), num_streaks)
+    return write_html(gamer1, gamer2, num_streaks)
 
 
 def main():
     if len(sys.argv) != 3:
         print(f"Specify gamerid: {sys.argv[0]} <gamerid1> <gamerid2>")
         return 1
-    num_streaks = 5
-    gamer1 = process_streaks(int(sys.argv[1]), num_streaks)
-    gamer2 = process_streaks(int(sys.argv[2]), num_streaks)
-    write_html(gamer1, gamer2, num_streaks)
+    html = lambda_entrypoint(int(sys.argv[1]), int(sys.argv[2]))
+    with open("rendered.html", "w") as fobj:
+        fobj.write(html)
 
 
 if __name__ == "__main__":
