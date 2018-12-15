@@ -1,5 +1,7 @@
 FROM amazonlinux:latest
 
+# Inspired by https://github.com/tomelliff/py-s3-sftp-bridge/blob/master/Dockerfile
+
 RUN yum install -y zip
 RUN yum install -y python3
 RUN curl -O -s https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py
