@@ -1,12 +1,7 @@
 #!/bin/sh
 
+docker build -t streakanalyzer:latest .
+
+rm -rf BUILD
 mkdir BUILD
-mkdir BUILD/templates
-cp analyzer.py BUILD/
-cp templates/compare_gamers.jinja2 BUILD/templates/
-cp requirements.txt BUILD/
-cd BUILD
-pip install -r requirements.txt -t .
-rm requirements.txt
-zip -r lambda.zip *
-mv lambda.zip ..
+docker run -v $(pwd)/BUILD:/working2 --rm lambdatest:latest cp lambda.zip /working2
