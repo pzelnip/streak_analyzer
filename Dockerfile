@@ -10,6 +10,6 @@ WORKDIR /working
 COPY requirements.txt /working
 RUN pip3 install -r requirements.txt -t .
 COPY analyzer.py /working
-COPY templates/compare_gamers.jinja2 /working/templates
+COPY templates/compare_gamers.jinja2 /working/templates/
 
 RUN zip -r lambda.zip *

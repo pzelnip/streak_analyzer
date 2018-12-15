@@ -173,9 +173,17 @@ def write_html(gamer1, gamer2, num_to_display):
     return template.render(gamer1=gamer1, gamer2=gamer2, num_streaks=num_to_display)
 
 
-def lambda_entrypoint(gamer_id1, gamer_id2, num_streaks=5):
-    gamer1 = process_streaks(int(sys.argv[1]), num_streaks)
-    gamer2 = process_streaks(int(sys.argv[2]), num_streaks)
+def lambda_entrypoint(event, context):
+    """Entrypoint for running this in AWS Lambda."""
+    # TODO: map event/context to get gamer id's
+    return process_gamers(20768, 11497)
+
+
+def process_gamers(gamer_id1, gamer_id2, num_streaks=5):
+    # TODO these two calls scream async
+    gamer1 = process_streaks(gamer_id1, num_streaks)
+    gamer2 = process_streaks(gamer_id2, num_streaks)
+
     return write_html(gamer1, gamer2, num_streaks)
 
 
@@ -183,7 +191,7 @@ def main():
     if len(sys.argv) != 3:
         print(f"Specify gamerid: {sys.argv[0]} <gamerid1> <gamerid2>")
         return 1
-    html = lambda_entrypoint(int(sys.argv[1]), int(sys.argv[2]))
+    html = process_gamers(int(sys.argv[1]), int(sys.argv[2]))
     with open("rendered.html", "w") as fobj:
         fobj.write(html)
 
