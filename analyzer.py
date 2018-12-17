@@ -176,7 +176,18 @@ def write_html(gamer1, gamer2, num_to_display):
 def lambda_entrypoint(event, context):
     """Entrypoint for running this in AWS Lambda."""
     # TODO: map event/context to get gamer id's
-    return process_gamers(20768, 11497)
+
+    # We assume a lambda proxy integration with API Gateway, which means
+    # the response must be a JSON object formatted as that below.  See
+    # https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-lambda.html#api-gateway-proxy-integration-lambda-function-python
+    # for details.
+    import json
+
+    return {
+        "statusCode": 200,
+        "headers": {"Content-Type": "text/html"},
+        "body": process_gamers(20768, 11497) + "\n\n",
+    }
 
 
 def process_gamers(gamer_id1, gamer_id2, num_streaks=5):
