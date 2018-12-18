@@ -4,8 +4,8 @@ Given two TA (trueachievements.com) gamer id's produce an HTML report
 comparing the achievement streaks of those two gamers.
 """
 
-
 import sys
+import json
 from collections import namedtuple
 from datetime import datetime, timedelta
 from urllib.parse import quote_plus
@@ -83,7 +83,7 @@ def parse_it(html_content):
         breadcrumbs = tree.xpath("//div[@id='breadcrumbs']")[0]
         gamertag = breadcrumbs.xpath(".//span/text()")[0]
     except IndexError:
-        return []
+        return "Unknown - No Such Gamer", []
 
     return (
         gamertag,
@@ -181,12 +181,21 @@ def lambda_entrypoint(event, context):
     # the response must be a JSON object formatted as that below.  See
     # https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-lambda.html#api-gateway-proxy-integration-lambda-function-python
     # for details.
-    import json
+
+    gamerid1 = 20768
+    gamerid2 = 337895
+
+    # ?gamerid1=20768&gamerid2=11497
+    if event:
+        qspm = event.get("queryStringParameters", {})
+        if qspm:
+            gamerid1 = qspm.get("gamerid1", 20768)
+            gamerid2 = qspm.get("gamerid2", 337895)
 
     return {
         "statusCode": 200,
         "headers": {"Content-Type": "text/html"},
-        "body": process_gamers(20768, 11497) + "\n\n",
+        "body": process_gamers(gamerid1, gamerid2),
     }
 
 
