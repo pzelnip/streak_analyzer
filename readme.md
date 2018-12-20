@@ -41,3 +41,7 @@ The values supplied are the `gamerid` values on TA.
 
 The output of this is that it writes a file in your current directory called
 `rendered.html` that does a quick comparison of the two gamers streaks.
+
+## I Want to See It Running
+
+Ok, go to: <https://om0ys5szh8.execute-api.ca-central-1.amazonaws.com/prod?gamerid1=20768&gamerid2=11497>
