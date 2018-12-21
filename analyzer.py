@@ -5,13 +5,13 @@ comparing the achievement streaks of those two gamers.
 """
 
 import sys
-import json
 from collections import namedtuple
 from datetime import datetime, timedelta
+from multiprocessing.pool import ThreadPool
 from urllib.parse import quote_plus
 
 import requests
-from jinja2 import Environment, FileSystemLoader, PackageLoader, select_autoescape
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 from lxml import html
 
 
@@ -200,11 +200,12 @@ def lambda_entrypoint(event, context):
 
 
 def process_gamers(gamer_id1, gamer_id2, num_streaks=5):
-    # TODO these two calls scream async
-    gamer1 = process_streaks(gamer_id1, num_streaks)
-    gamer2 = process_streaks(gamer_id2, num_streaks)
+    pool = ThreadPool(processes=2)
 
-    return write_html(gamer1, gamer2, num_streaks)
+    gamer1 = pool.apply_async(process_streaks, args=(gamer_id1, num_streaks))
+    gamer2 = pool.apply_async(process_streaks, (gamer_id2, num_streaks))
+
+    return write_html(gamer1.get(), gamer2.get(), num_streaks)
 
 
 def main():
