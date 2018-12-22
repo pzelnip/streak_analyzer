@@ -26,7 +26,7 @@ First get a Python env going (3.6 or better) and install the requirements:
 pip install -r requirements.txt --upgrade
 ```
 
-### Run the Script
+### Run the Script To Generate the HTML
 
 ```shell
 python3 analyzer.py 20768 337895
@@ -42,6 +42,8 @@ The values supplied are the `gamerid` values on TA.
 The output of this is that it writes a file in your current directory called
 `rendered.html` that does a quick comparison of the two gamers streaks.
 
-## I Want to See It Running
+## See Online
 
-Ok, go to: <https://om0ys5szh8.execute-api.ca-central-1.amazonaws.com/prod?gamerid1=20768&gamerid2=11497>
+Alternatively, since the Python just generates HTML, I've got it set up as an AWS Lambda behind AWS API Gateway.  You can hit it & select the gamer id's to compare by supplying two querystring variables: `gamerid1` and `gamerid2`.  As an example:
+
+<https://om0ys5szh8.execute-api.ca-central-1.amazonaws.com/prod?gamerid1=20768&gamerid2=11497>
