@@ -46,4 +46,4 @@ The output of this is that it writes a file in your current directory called
 
 Alternatively, since the Python just generates HTML, I've got it set up as an AWS Lambda behind AWS API Gateway.  You can hit it & select the gamer id's to compare by supplying two querystring variables: `gamerid1` and `gamerid2`.  As an example:
 
-<https://om0ys5szh8.execute-api.ca-central-1.amazonaws.com/prod?gamerid1=20768&gamerid2=11497>
+<https://om0ys5szh8.execute-api.ca-central-1.amazonaws.com/prod?gamerid1=20768&gamerid2=337895>
